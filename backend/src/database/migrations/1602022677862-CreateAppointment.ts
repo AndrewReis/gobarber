@@ -17,12 +17,10 @@ export default class CreateAppointment1602022677862
                     {
                         name: "provider",
                         type: "varchar",
-                        isNullable: false,
                     },
                     {
                         name: "date",
                         type: "timestamp with time zone",
-                        isNullable: false,
                     },
                     {
                         name: "created_at",
