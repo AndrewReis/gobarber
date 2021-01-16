@@ -1,4 +1,4 @@
-import React, { useCallback, useRef } from 'react';
+import React, { useCallback, useRef, useContext } from 'react';
 import { FiLogIn, FiMail, FiLock } from 'react-icons/fi'
 import { Form } from '@unform/web'
 import { FormHandles } from '@unform/core'
@@ -9,13 +9,22 @@ import logo from '../../assets/logo.svg'
 import Input from '../../components/Input'
 import Button from '../../components/Button'
 import getValidationErrors from '../../utils/getValidationErrors';
+import {useAuth} from '../../context/AuthenticateContext';
 
 import { Container, Content, Background } from './styles'
 
-const SignIn:React.FC = () => {
-	const formRef = useRef<FormHandles>(null)
+interface SignInFormData {
+	email: string;
+	password: string;
+}
 
-	const handleSubmit = useCallback( async (data: object) => {
+const SignIn:React.FC = () => {
+	const formRef = useRef<FormHandles>(null);
+
+	const { signIn, user } = useAuth();
+	console.log(user)
+
+	const handleSubmit = useCallback( async (data: SignInFormData) => {
 		try {
 			formRef.current?.setErrors({})
 			const schema = Yup.object().shape({
@@ -25,14 +34,18 @@ const SignIn:React.FC = () => {
 
 			await schema.validate(data, {
 				abortEarly: false
-			})
-		} catch (error) {
+			});
 
+			signIn({
+				email: data.email,
+				password: data.password,
+			});
+
+		} catch (error) {
 			const errors = getValidationErrors(error)
 			formRef.current?.setErrors(errors)
-			console.log(error)
 		}
-	}, [])
+	}, [signIn])
 
 	return (
 		<Container>
