@@ -1,4 +1,5 @@
 import React, { useCallback, useRef } from 'react';
+import { Link } from 'react-router-dom';
 import { FiLogIn, FiMail, FiLock } from 'react-icons/fi'
 import { Form } from '@unform/web'
 import { FormHandles } from '@unform/core'
@@ -13,7 +14,7 @@ import getValidationErrors from '../../utils/getValidationErrors';
 import {useAuth} from '../../context/AuthenticateContext';
 import {useToast} from '../../context/ToastContext';
 
-import { Container, Content, Background } from './styles'
+import { Container, Content, Background, AnimationContent } from './styles'
 
 interface SignInFormData {
 	email: string;
@@ -47,6 +48,7 @@ const SignIn:React.FC = () => {
 			if(error instanceof Yup.ValidationError){
 				const errors = getValidationErrors(error)
 				formRef.current?.setErrors(errors)
+				return
 			}
 			//Toast Message
 			addToast({
@@ -60,7 +62,8 @@ const SignIn:React.FC = () => {
 	return (
 		<Container>
 			<Content>
-				<img src={logo} alt="GoBarber"/>
+				<AnimationContent>
+					<img src={logo} alt="GoBarber"/>
 					<Form ref={formRef} onSubmit={handleSubmit} >
 						<h1>Faça seu Logon</h1>
 						<Input name="email" icon={FiMail} placeholder="E-mail" />
@@ -70,10 +73,11 @@ const SignIn:React.FC = () => {
 							Esqueci minha senha
 						</a>
 					</Form>
-					<a href="/">
+					<Link to="/signup">
 						<FiLogIn size={20} />
 						Criar conta
-					</a>
+					</Link>
+				</AnimationContent>
 			</Content>
 			<Background />
 		</Container>
